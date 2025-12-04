@@ -154,7 +154,7 @@ public class PostgreSqlAdapter : ISqlOperationsAdapter
                 entitiesCopiedCount++;
                 if (progress != null && entitiesCopiedCount % tableInfo.BulkConfig.NotifyAfter == 0)
                 {
-                    progress?.Invoke(ProgressHelper.GetProgress(entities.Count(), entitiesCopiedCount));
+                    //progress?.Invoke(ProgressHelper.GetProgress(entities.Count(), entitiesCopiedCount));
                 }
             }
             if (isAsync)
@@ -212,7 +212,7 @@ public class PostgreSqlAdapter : ISqlOperationsAdapter
 
         object? propertyValue = entity;
         string fullPropertyName = string.Empty;
-        foreach (var entry in propertyName.AsSpan().Split("."))
+        foreach (var entry in propertyName.Split(".").AsSpan())
         {
             if (propertyValue == null)
             {
@@ -345,7 +345,7 @@ public class PostgreSqlAdapter : ISqlOperationsAdapter
             {
                 var sqlMergeTableOutput = sqlMergeTable.TrimEnd(';');                                         // When ends with ';' test OwnedTypes throws ex at LoadOutputEntities:
                 List<T> outputEntities = tableInfo.LoadOutputEntities<T>(dbContext, type, sqlMergeTableOutput); // postgresql '42601: syntax error at or near ";"
-                tableInfo.UpdateReadEntities(entities, outputEntities, dbContext);
+                // tableInfo.UpdateReadEntities(entities, outputEntities, dbContext);
             }
 
             if (tableInfo.BulkConfig.CustomSqlPostProcess != null)
@@ -371,11 +371,11 @@ public class PostgreSqlAdapter : ISqlOperationsAdapter
                 {
                     numberInserted = GetStatsNumbersPGAsync(dbContext, tableInfo, isAsync: false, cancellationToken).GetAwaiter().GetResult();
                 }
-                tableInfo.BulkConfig.StatsInfo = new StatsInfo
-                {
-                    StatsNumberInserted = numberInserted,
-                    StatsNumberUpdated = entities.Count() - numberInserted,
-                };
+                // tableInfo.BulkConfig.StatsInfo = new StatsInfo
+                // {
+                //     StatsNumberInserted = numberInserted,
+                //     StatsNumberUpdated = entities.Count() - numberInserted,
+                // };
             }
         }
         finally
